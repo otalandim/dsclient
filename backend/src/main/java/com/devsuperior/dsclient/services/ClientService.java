@@ -6,11 +6,13 @@ import com.devsuperior.dsclient.repositories.ClientRepository;
 import com.devsuperior.dsclient.services.exceptions.ClientNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
 
 @Service
@@ -47,7 +49,15 @@ public class ClientService {
             copyDtoToEntity(clientDto, client);
             client = clientRepository.save(client);
             return new ClientDTO(client);
-        } catch (ClientNotFoundException c) {
+        } catch (EntityNotFoundException c) {
+            throw new ClientNotFoundException("Client not found");
+        }
+    }
+
+    public void delete(Long id) {
+        try {
+            clientRepository.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
             throw new ClientNotFoundException("Client not found");
         }
     }
@@ -59,6 +69,5 @@ public class ClientService {
         client.setBirthDate(clientDto.getBirthDate());
         client.setChildren(clientDto.getChildren());
     }
-
 
 }
