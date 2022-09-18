@@ -2,9 +2,9 @@ package com.devsuperior.dsclient.services;
 
 import com.devsuperior.dsclient.dto.ClientDTO;
 import com.devsuperior.dsclient.entities.Client;
-
 import com.devsuperior.dsclient.repositories.ClientRepository;
 import com.devsuperior.dsclient.services.exceptions.ClientNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,5 +30,21 @@ public class ClientService {
         Optional<Client> cli = clientRepository.findById(id);
         Client client = cli.orElseThrow(() -> new ClientNotFoundException("Client not found"));
         return new ClientDTO(client);
+    }
+
+    @Transactional
+    public ClientDTO create(ClientDTO clientDto) {
+        Client client = new Client();
+        copyDtoToEntity(clientDto, client);
+        client = clientRepository.save(client);
+        return new ClientDTO(client);
+    }
+
+    private void copyDtoToEntity(ClientDTO clientDto, Client client) {
+        client.setName(clientDto.getName());
+        client.setCpf(clientDto.getCpf());
+        client.setIncome(clientDto.getIncome());
+        client.setBirthDate(clientDto.getBirthDate());
+        client.setChildren(clientDto.getChildren());
     }
 }
