@@ -1,8 +1,7 @@
 package com.devsuperior.dsclient.controllers;
 
-import com.devsuperior.dsclient.entities.Client;
+import com.devsuperior.dsclient.dto.ClientDTO;
 import com.devsuperior.dsclient.services.ClientService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,8 +18,8 @@ public class ClientController {
     private ClientService clientService;
 
     @GetMapping
-    public ResponseEntity<List<Client>> findAll(){
-        List<Client> list = clientService.findAll();
+    public ResponseEntity<List<ClientDTO>> findAll(){
+        List<ClientDTO> list = clientService.findAll();
         return ResponseEntity.ok().body(list);
     }
 }
