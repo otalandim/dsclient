@@ -40,6 +40,18 @@ public class ClientService {
         return new ClientDTO(client);
     }
 
+    @Transactional
+    public ClientDTO update(Long id, ClientDTO clientDto) {
+        try {
+            Client client = clientRepository.getReferenceById(id);
+            copyDtoToEntity(clientDto, client);
+            client = clientRepository.save(client);
+            return new ClientDTO(client);
+        } catch (ClientNotFoundException c) {
+            throw new ClientNotFoundException("Client not found");
+        }
+    }
+
     private void copyDtoToEntity(ClientDTO clientDto, Client client) {
         client.setName(clientDto.getName());
         client.setCpf(clientDto.getCpf());
@@ -47,4 +59,6 @@ public class ClientService {
         client.setBirthDate(clientDto.getBirthDate());
         client.setChildren(clientDto.getChildren());
     }
+
+
 }
