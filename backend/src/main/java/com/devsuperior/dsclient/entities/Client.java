@@ -21,6 +21,11 @@ public class Client implements Serializable {
     private Instant birthDate;
     private Integer children;
 
+    @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
+    private Instant createdAt;
+    @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
+    private Instant updatedAt;
+
     public Client() {}
 
     public Client(Long id, String name, String cpf, Double income, Instant birthDate, Integer children) {
@@ -78,6 +83,24 @@ public class Client implements Serializable {
 
     public void setChildren(Integer children) {
         this.children = children;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        createdAt = Instant.now();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        updatedAt = Instant.now();
     }
 
     @Override
