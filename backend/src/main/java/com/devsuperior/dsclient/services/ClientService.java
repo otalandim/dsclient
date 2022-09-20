@@ -21,6 +21,8 @@ public class ClientService {
     @Autowired
     private ClientRepository clientRepository;
 
+    private static final String CLIENT_NOT_FOUND = "Client not found";
+
     @Transactional(readOnly = true)
     public Page<ClientDTO> findAllPaged(PageRequest pageRequest) {
         Page<Client> list = clientRepository.findAll(pageRequest);
@@ -30,7 +32,7 @@ public class ClientService {
     @Transactional(readOnly = true)
     public ClientDTO findById(Long id) {
         Optional<Client> cli = clientRepository.findById(id);
-        Client client = cli.orElseThrow(() -> new ClientNotFoundException("Client not found"));
+        Client client = cli.orElseThrow(() -> new ClientNotFoundException(CLIENT_NOT_FOUND));
         return new ClientDTO(client);
     }
 
@@ -50,7 +52,7 @@ public class ClientService {
             client = clientRepository.save(client);
             return new ClientDTO(client);
         } catch (EntityNotFoundException c) {
-            throw new ClientNotFoundException("Client not found");
+            throw new ClientNotFoundException(CLIENT_NOT_FOUND);
         }
     }
 
@@ -58,7 +60,7 @@ public class ClientService {
         try {
             clientRepository.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
-            throw new ClientNotFoundException("Client not found");
+            throw new ClientNotFoundException(CLIENT_NOT_FOUND);
         }
     }
 
